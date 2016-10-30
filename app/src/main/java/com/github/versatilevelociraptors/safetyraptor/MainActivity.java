@@ -8,11 +8,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity  {
+    private Socket socket;
 
+    private PrintWriter writer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -22,8 +30,9 @@ public class MainActivity extends AppCompatActivity  {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast.makeText(MainActivity.this, "Connecting to server...", Toast.LENGTH_LONG).show();
+                new ClientTask().execute();
+
             }
         });
     }
