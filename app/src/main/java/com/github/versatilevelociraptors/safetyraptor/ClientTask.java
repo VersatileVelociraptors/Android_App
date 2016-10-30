@@ -26,6 +26,12 @@ public class ClientTask extends AsyncTask {
     public static final int PORT = 2585;
     private PrintWriter writer;
 
+    public AsyncResponse delegate = null;
+
+    public ClientTask(AsyncResponse delegate) {
+        this.delegate = delegate;
+    }
+
     @Override
     protected String doInBackground(Object[] objects) {
         OutputStream stream;
@@ -38,8 +44,7 @@ public class ClientTask extends AsyncTask {
                     writer.flush();
                 }
             } catch (IOException e) {
-                connected = false;
-                e.printStackTrace();
+                delegate.print(e.toString());
             }
         return response;
     }

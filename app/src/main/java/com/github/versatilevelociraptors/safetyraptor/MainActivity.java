@@ -6,7 +6,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import android.os.AsyncTask;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,10 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.PrintWriter;
 
+import com.github.versatilevelociraptors.safetyraptor.AsyncResponse;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
+
+
 
     private Sensor gyro;
     private SensorManager sensorManager;
@@ -28,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private int x,y,z;
     private PrintWriter writer;
 
-    @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -41,7 +42,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Connecting to server...", Toast.LENGTH_LONG).show();
-                new ClientTask().execute(savedInstanceState);
+
+                new ClientTask(new AsyncResponse() {
+                    @Override
+                    public void print(String output){
+                        System.out.println(output);
+                    }
+                }).execute(savedInstanceState);
             }
         });
 
