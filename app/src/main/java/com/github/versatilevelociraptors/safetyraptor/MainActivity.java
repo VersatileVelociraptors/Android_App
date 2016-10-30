@@ -102,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        x += (int)sensorEvent.values[0];
-        y += (int)sensorEvent.values[1];
-        z += (int)sensorEvent.values[2];
+        int dX = (int)sensorEvent.values[0];
+        int dY = (int)sensorEvent.values[1];
+        int dZ = (int)sensorEvent.values[2];
         if (writer != null) {
-            writer.println("" + x + " " + y + " " + z);
+            writer.println("" + dX + " " + dY + " " + dZ);
             writer.flush();
         }
-        gyroText.setText("X: " + x + " Y: " + y + " Z: " + z);
+        gyroText.setText("X: " + dX + " Y: " + dY + " Z: " + dZ);
 
     }
 
