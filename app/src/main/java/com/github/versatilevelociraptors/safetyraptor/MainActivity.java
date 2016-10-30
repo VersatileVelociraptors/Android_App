@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Connecting to server...", Toast.LENGTH_LONG).show();
-
+                writer = null;
+                x = 0;
+                y = 0;
+                z = 0;
                 new ClientTask(new AsyncResponse() {
                     @Override
                     public void print(String output){
@@ -95,11 +98,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         z += (int)sensorEvent.values[2];
         if(writer != null) {
             writer.print(x);
+            writer.flush();
             writer.print(y);
+            writer.flush();
             writer.print(z);
+            writer.flush();
+            gyroText.setText("X: " +  x + " Y: " +  y + " Z: " +  z);
         }
 
-        gyroText.setText("X: " +  x + " Y: " +  y + " Z: " +  z);
+
     }
 
     @Override
