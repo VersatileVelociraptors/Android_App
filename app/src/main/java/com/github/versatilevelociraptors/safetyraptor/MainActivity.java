@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     public void print(String output){
                         System.out.println(output);
                     }
+
+                    @Override
+                    public void setPrintWriter(PrintWriter writ) {
+                        writer = writ;
+                    }
                 }).execute(savedInstanceState);
             }
         });
@@ -88,6 +93,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         x += (int)sensorEvent.values[0];
         y += (int)sensorEvent.values[1];
         z += (int)sensorEvent.values[2];
+        if(writer != null) {
+            writer.print(x);
+            writer.print(y);
+            writer.print(z);
+        }
+
         gyroText.setText("X: " +  x + " Y: " +  y + " Z: " +  z);
     }
 

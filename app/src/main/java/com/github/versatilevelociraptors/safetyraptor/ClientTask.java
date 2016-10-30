@@ -21,10 +21,8 @@ import static android.content.Context.SENSOR_SERVICE;
  */
 
 public class ClientTask extends AsyncTask {
-    private Socket serverSocket;
     public static final String SERVER = "172.25.75.108";
     public static final int PORT = 2585;
-    private PrintWriter writer;
 
     public AsyncResponse delegate = null;
 
@@ -34,14 +32,14 @@ public class ClientTask extends AsyncTask {
 
     @Override
     protected String doInBackground(Object[] objects) {
-        OutputStream stream;
         String response = "";
-        boolean connected = false;
             try {
-                if(connected && serverSocket.isConnected()) {
+                Socket serverSocket = new Socket(SERVER, PORT);
+                if(serverSocket.isConnected()) {
                     PrintWriter writer = new PrintWriter(serverSocket.getOutputStream());
                     writer.println("2585");
                     writer.flush();
+                    delegate.setPrintWriter(writer);
                 }
             } catch (IOException e) {
                 delegate.print(e.toString());
