@@ -16,7 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 
 import com.github.versatilevelociraptors.safetyraptor.AsyncResponse;
 
@@ -27,9 +30,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor gyro;
     private SensorManager sensorManager;
     private TextView gyroText;
-    private int x,y,z;
+    private byte x,y,z;
     private PrintWriter writer;
-
+    private Socket serverSocket;
     protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 x = 0;
                 y = 0;
                 z = 0;
+
                 new ClientTask(new AsyncResponse() {
                     @Override
                     public void print(String output){
@@ -55,6 +59,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     @Override
                     public void setPrintWriter(PrintWriter writ) {
                         writer = writ;
+                    }
+
+                    @Override
+                    public void setSocket(Socket socket) {
+                        serverSocket = socket;
                     }
                 }).execute(savedInstanceState);
             }
@@ -93,20 +102,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        x += (int)sensorEvent.values[0];
-        y += (int)sensorEvent.values[1];
-        z += (int)sensorEvent.values[2];
-        if(writer != null) {
-            writer.print(x);
-            writer.flush();
-            writer.print(y);
-            writer.flush();
-            writer.print(z);
-            writer.flush();
-            gyroText.setText("X: " +  x + " Y: " +  y + " Z: " +  z);
+        x += (byte) sensorEvent.values[0];
+        y += (byte) sensorEvent.values[1];
+        z += (byte) sensorEvent.values[2];
+        if (writer != null) {
+            byte[] data = {x, y , z};
+            try {
+                serverSocket.getOutputStream().write(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            gyroText.setText("X: " + x + " Y: " + y + " Z: " + z);
         }
-
-
     }
 
     @Override
