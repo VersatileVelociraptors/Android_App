@@ -2,7 +2,9 @@ package com.github.versatilevelociraptors.safetyraptor;
 
 import android.os.AsyncTask;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,17 +20,25 @@ public class ClientTask extends AsyncTask {
     public static final String SERVER = "172.25.75.108";
     public static final int PORT = 2585;
     private PrintWriter writer;
+
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected String doInBackground(Object[] objects) {
         OutputStream stream;
-        try {
-            serverSocket = new Socket(SERVER, PORT);
-            DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
-            out.writeUTF("2585");
-        } catch (IOException e) {
-            e.printStackTrace();
+        String response = "";
+        while(!response.equals("Michael is a gypsy")) {
+            try {
+                Socket serverSocket = new Socket(SERVER, PORT);
+                DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
+                DataInputStream in = new DataInputStream(serverSocket.getInputStream());
+
+                out.writeUTF("2585");
+                response = in.readUTF();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
-        return null;
+        return response;
     }
 
     @Override
@@ -36,20 +46,6 @@ public class ClientTask extends AsyncTask {
         super.onPreExecute();
     }
 
-    @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
-    }
-
-    @Override
-    protected void onProgressUpdate(Object[] values) {
-        super.onProgressUpdate(values);
-    }
-
-    @Override
-    protected void onCancelled(Object o) {
-        super.onCancelled(o);
-    }
 
     @Override
     protected void onCancelled() {

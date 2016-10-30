@@ -1,9 +1,13 @@
 package com.github.versatilevelociraptors.safetyraptor;
 
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private PrintWriter writer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -37,8 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "Connecting to server...", Toast.LENGTH_LONG).show();
-                new ClientTask().execute();
-
+                new ClientTask().execute(savedInstanceState);
             }
         });
 
