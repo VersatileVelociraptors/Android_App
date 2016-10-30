@@ -38,11 +38,9 @@ public class ClientTask extends AsyncTask {
                 if(serverSocket.isConnected()) {
                     PrintWriter writer = new PrintWriter(serverSocket.getOutputStream());
                     writer.println("2585");
-
                     writer.flush();
                     delegate.setPrintWriter(writer);
                     delegate.setSocket(serverSocket);
-                    writer.close();
                 }
             } catch (IOException e) {
                 delegate.print(e.toString());

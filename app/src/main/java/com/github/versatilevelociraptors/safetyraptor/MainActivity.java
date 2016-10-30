@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor gyro;
     private SensorManager sensorManager;
     private TextView gyroText;
-    private byte x,y,z;
+    private int x,y,z;
     private PrintWriter writer;
     private Socket serverSocket;
     protected void onCreate(final Bundle savedInstanceState) {
@@ -102,18 +102,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        x += (byte) sensorEvent.values[0];
-        y += (byte) sensorEvent.values[1];
-        z += (byte) sensorEvent.values[2];
+        x += (int)sensorEvent.values[0];
+        y += (int)sensorEvent.values[1];
+        z += (int)sensorEvent.values[2];
         if (writer != null) {
-            byte[] data = {x, y , z};
-            try {
-                serverSocket.getOutputStream().write(data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            gyroText.setText("X: " + x + " Y: " + y + " Z: " + z);
+            writer.println("" + x + " " + y + " " + z);
+            writer.flush();
         }
+        gyroText.setText("X: " + x + " Y: " + y + " Z: " + z);
+
     }
 
     @Override
