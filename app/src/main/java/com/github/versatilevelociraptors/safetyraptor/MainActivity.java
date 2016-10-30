@@ -1,23 +1,29 @@
 package com.github.versatilevelociraptors.safetyraptor;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.Socket;
 
-public class MainActivity extends AppCompatActivity  {
-    private Socket socket;
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
+    private Sensor gyro;
+    private SensorManager sensorManager;
+    private TextView gyroText;
+    private int x,y,z;
     private PrintWriter writer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,6 +41,14 @@ public class MainActivity extends AppCompatActivity  {
 
             }
         });
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+
+        gyroText = (TextView) findViewById(R.id.gyro);
+
+
     }
 
     @Override
@@ -57,5 +71,18 @@ public class MainActivity extends AppCompatActivity  {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        x += (int)sensorEvent.values[0];
+        y += (int)sensorEvent.values[1];
+        z += (int)sensorEvent.values[2];
+        gyroText.setText("X: " +  x + " Y: " +  y + " Z: " +  z);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
